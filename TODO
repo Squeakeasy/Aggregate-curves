@@ -1,0 +1,5 @@
+- Fix multiple graphs
+- Add grid lines
+- Make ordering be x axis, not order added to lists
+- Add labels
+- Add table with numbers by each graph, two-way binding
