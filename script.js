@@ -1,4 +1,4 @@
-const GRAPH_AXIS_SIZE = 80;
+const GRAPH_AXIS_SIZE = 180;
 const GRAPH_AXIS_OFFSET = 10.5;
 
 let graphs = [];
