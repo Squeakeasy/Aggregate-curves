@@ -50,6 +50,12 @@ class SupplyDemandCurve extends HTMLElement {
 	this.axis_offset = GRAPH_AXIS_OFFSET;
 	this.axis_size = this.canvas.height - this.axis_offset * 2;
 	this.price_points = make_price_points();
+
+	this.amount_inputs = {};
+	for (let amount_input of this.shadow.querySelectorAll("#values tr")) {
+	    amount_input.graph = this;
+	    this.amount_inputs[amount_input.dataset.price] = amount_input;
+	}
     }
     get_price_point(index) {
 	return this.price_points[PRICES[index]];
@@ -111,7 +117,7 @@ class SupplyDemandCurve extends HTMLElement {
 	}
     }
 
-    adjust_price_point(price, amount) {
+    adjust_price_point(price, amount, propagate) {
 	if (amount < 0) {
 	    amount = 0;
 	}
@@ -120,11 +126,15 @@ class SupplyDemandCurve extends HTMLElement {
 	    p++;
 	} while (PRICES[p] < price);
 	if (p == PRICES.length) {
-	    this.price_points[PRICES[PRICES.length - 1]] = amount;
+	    price = PRICES[PRICES.length - 1];
 	} else if (Math.abs(PRICES[p - 1] - price) < Math.abs(PRICES[p] - price)) {
-	    this.price_points[PRICES[p - 1]] = amount;
+	    price = PRICES[p - 1];
 	} else {
-	    this.price_points[PRICES[p]] = amount;
+	    price = PRICES[p]
+	}
+	this.price_points[price] = Math.floor(amount);
+	if (propagate != false) {
+	    this.amount_inputs[price].set_amount(Math.floor(amount));
 	}
     }
     
@@ -142,7 +152,18 @@ class AmountInput extends HTMLTableRowElement {
 	const template = document.getElementById("amount-input");
 	this.appendChild(template.content.cloneNode(true));
 	this.input = this.querySelector("input[type='number']");
+	this.input.addEventListener("change", (e) => this.input_changed(e));
 	this.querySelector("#price").textContent = this.dataset.price;
+	this.set_amount(0);
+    }
+    input_changed(e) {
+	if (this.graph) {
+	    this.graph.adjust_price_point(this.dataset.price, this.input.value, false);
+	    this.graph.draw();
+	}
+    }
+    set_amount(amount) {
+	this.input.value = amount;
     }
 };
 customElements.define("amount-input", AmountInput, { extends: "tr" });

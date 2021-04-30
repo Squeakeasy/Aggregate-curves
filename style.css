@@ -36,5 +36,5 @@ main.sd-curve #values tr {
     padding: 0;
 }
 main.sd-curve #values input[type="number"] {
-    width: 4ex;
+    width: 5ex;
 }
