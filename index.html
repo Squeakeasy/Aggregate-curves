@@ -20,7 +20,15 @@
     <script src="script.js" async defer></script>
   </head>
   <body>
-    <canvas></canvas>
-    <canvas></canvas>
+    <template id="supply-demand-curve">
+      <canvas width=200 height=200></canvas>
+      <div>
+	<label>Curve name
+	  <input type="text" class="label">
+	</label>
+      </div>
+    </template>
+    <supply-demand-curve></supply-demand-curve>
+    <supply-demand-curve></supply-demand-curve>
   </body>
 </html>

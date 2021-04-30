@@ -40,10 +40,14 @@ function make_price_points() {
     return points;
 }
 
-class Graph {
-    constructor(el) {
-	this.el = el;
-	this.el.addEventListener("click", (e) => this.click(e));
+class SupplyDemandCurve extends HTMLElement {
+    constructor() {
+	super();
+	const template = document.getElementById("supply-demand-curve");
+    	this.shadow = this.attachShadow({mode: "open"});
+	this.shadow.appendChild(template.content.cloneNode(true));
+	this.canvas = this.shadow.querySelector("canvas");
+	this.canvas.addEventListener("click", (e) => this.click(e));
 	this.axis_size = GRAPH_AXIS_SIZE;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
 	this.price_points = make_price_points();
@@ -53,9 +57,9 @@ class Graph {
     }
     
     draw() {
-	const ctx = this.el.getContext("2d");
+	const ctx = this.canvas.getContext("2d");
 	ctx.fillStyle = "white";
-	ctx.fillRect(0, 0, this.el.width, this.el.height);
+	ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = "black";
@@ -126,6 +130,7 @@ class Graph {
 	this.draw();
     }
 };
+customElements.define("supply-demand-curve", SupplyDemandCurve);
 
 function draw_graphs(graphs) {
     for (let g of graphs) {
@@ -134,12 +139,7 @@ function draw_graphs(graphs) {
 }
 
 function init() {
-    for (let canvas of document.querySelectorAll("canvas")) {
-	canvas.width = 210;
-	canvas.height = 210;
-	graphs.push(new Graph(canvas));
-    }
-    draw_graphs(graphs);
+    draw_graphs(document.querySelectorAll("supply-demand-curve"));
 }
 
 init();
