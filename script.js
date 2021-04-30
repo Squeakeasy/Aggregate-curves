@@ -9,10 +9,19 @@ if (typeof(Math.TAU) == "undefined") {
     Math.TAU = Math.PI * 2;
 }
 
-function make_points() {
-    const points = [];
+function make_prices() {
+    const prices = [];
     for (let y = 0; y <= 100; y += 10) {
-	points.push({x: 0, y: y});
+	prices.push(y);
+    }
+    return prices;
+}
+const PRICES = make_prices();
+
+function make_price_points() {
+    const points = {};
+    for (let price of PRICES) {
+	points[price] = 0;
     }
     return points;
 }
@@ -23,9 +32,12 @@ class Graph {
 	this.el.addEventListener("click", (e) => this.click(e));
 	this.axis_size = GRAPH_AXIS_SIZE;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
-	this.points = make_points();
+	this.price_points = make_price_points();
     }
-
+    get_price_point(index) {
+	return this.price_points[PRICES[index]];
+    }
+    
     draw() {
 	const ctx = this.el.getContext("2d");
 	ctx.fillStyle = "white";
@@ -51,28 +63,48 @@ class Graph {
 	ctx.restore();
     }
     draw_points(ctx) {
-	if (this.points.length == 0) {
+	if (this.price_points.length == 0) {
 	    return;
 	}
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";
-	ctx.moveTo(this.points[0].x, this.axis_size - this.points[0].y * PRICE_SCALE);
-	for (let point of this.points) {
-	    ctx.lineTo(point.x, this.axis_size - point.y * PRICE_SCALE);
+	ctx.moveTo(this.get_price_point(0), this.axis_size - PRICES[0] * PRICE_SCALE);
+	for (let price of PRICES) {
+	    ctx.lineTo(this.price_points[price], this.axis_size - price * PRICE_SCALE);
 	}
 	ctx.stroke();
 
 	ctx.fillStyle = "blue";
-	for (let point of this.points) {
+	for (let price of PRICES) {
 	    ctx.beginPath();
-	    ctx.arc(point.x, this.axis_size - point.y * PRICE_SCALE, POINT_R, 0, Math.TAU, false);
+	    ctx.arc(this.price_points[price], this.axis_size - price * PRICE_SCALE,
+		    POINT_R, 0, Math.TAU, false);
 	    ctx.fill();
 	}
     }
 
+    adjust_price_point(price, amount) {
+	let p = 0;
+	do {
+	    p++;
+	} while (PRICES[p] < price);
+	if (Math.abs(PRICES[p - 1] - price) < Math.abs(PRICES[p] - price)) {
+	    this.price_points[PRICES[p - 1]] = amount;
+	} else {
+	    this.price_points[PRICES[p]] = amount;
+	}
+    }
+    
     click(e) {
-	//	this.points.push({x: e.clientX - this.axis_offset,
-//			  y: e.clientY - this.axis_offset});
+	const price = this.axis_offset + (this.axis_size - e.clientY) / PRICE_SCALE;
+	console.log({
+	    "axis_size": this.axis_size,
+	    "clientY": e.clientY,
+	    "axis_size - clientY": this.axis_size - e.clientY,
+	    "scaled": (this.axis_size - e.clientY) / PRICE_SCALE,
+	    "price": price});
+	this.adjust_price_point(price,
+				e.clientX - this.axis_offset);
 	this.draw();
     }
 };
