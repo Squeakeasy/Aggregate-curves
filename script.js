@@ -1,3 +1,17 @@
+/* This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 const GRAPH_AXIS_SIZE = 180;
 const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
@@ -11,7 +25,7 @@ if (typeof(Math.TAU) == "undefined") {
 
 function make_prices() {
     const prices = [];
-    for (let y = 0; y <= 100; y += 10) {
+    for (let y = 0; y < 100; y += 10) {
 	prices.push(y);
     }
     return prices;
@@ -58,9 +72,20 @@ class Graph {
 
 	ctx.stroke();
 
+	this.draw_price_guides(ctx);
+	
 	this.draw_points(ctx);
 	
 	ctx.restore();
+    }
+    draw_price_guides(ctx) {
+	ctx.strokeStyle = "#aaa";
+	ctx.beginPath();
+	for (let price of PRICES) {
+	    ctx.moveTo(0, price * PRICE_SCALE);
+	    ctx.lineTo(this.axis_size, price * PRICE_SCALE);
+	}
+	ctx.stroke();
     }
     draw_points(ctx) {
 	if (this.price_points.length == 0) {
@@ -96,15 +121,8 @@ class Graph {
     }
     
     click(e) {
-	const price = this.axis_offset + (this.axis_size - e.clientY) / PRICE_SCALE;
-	console.log({
-	    "axis_size": this.axis_size,
-	    "clientY": e.clientY,
-	    "axis_size - clientY": this.axis_size - e.clientY,
-	    "scaled": (this.axis_size - e.clientY) / PRICE_SCALE,
-	    "price": price});
-	this.adjust_price_point(price,
-				e.clientX - this.axis_offset);
+	const price = (this.axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE;
+	this.adjust_price_point(price, e.offsetX - this.axis_offset);
 	this.draw();
     }
 };
@@ -116,8 +134,11 @@ function draw_graphs(graphs) {
 }
 
 function init() {
-    graphs.push(new Graph(document.getElementById("canvas")));
-    graphs.push(new Graph(document.getElementById("canvas2")));
+    for (let canvas of document.querySelectorAll("canvas")) {
+	canvas.width = 210;
+	canvas.height = 210;
+	graphs.push(new Graph(canvas));
+    }
     draw_graphs(graphs);
 }
 
