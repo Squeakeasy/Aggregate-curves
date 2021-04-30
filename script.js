@@ -12,10 +12,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const GRAPH_AXIS_SIZE = 180;
 const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
-const PRICE_SCALE = 2;
+const PRICE_SCALE = 3;
 
 let graphs = [];
 
@@ -48,8 +47,8 @@ class SupplyDemandCurve extends HTMLElement {
 	this.shadow.appendChild(template.content.cloneNode(true));
 	this.canvas = this.shadow.querySelector("canvas");
 	this.canvas.addEventListener("click", (e) => this.click(e));
-	this.axis_size = GRAPH_AXIS_SIZE;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
+	this.axis_size = this.canvas.height - this.axis_offset * 2;
 	this.price_points = make_price_points();
     }
     get_price_point(index) {
@@ -86,8 +85,8 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.strokeStyle = "#aaa";
 	ctx.beginPath();
 	for (let price of PRICES) {
-	    ctx.moveTo(0, price * PRICE_SCALE);
-	    ctx.lineTo(this.axis_size, price * PRICE_SCALE);
+	    ctx.moveTo(0, this.axis_size - price * PRICE_SCALE);
+	    ctx.lineTo(this.axis_size, this.axis_size - price * PRICE_SCALE);
 	}
 	ctx.stroke();
     }
@@ -113,6 +112,9 @@ class SupplyDemandCurve extends HTMLElement {
     }
 
     adjust_price_point(price, amount) {
+	if (amount < 0) {
+	    amount = 0;
+	}
 	let p = 0;
 	do {
 	    p++;

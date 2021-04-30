@@ -8,6 +8,14 @@ main.sd-curve h3 {
     text-align: center;
     font-size: small;
 }
+main.sd-curve div.label {
+    text-align: center;
+}
 main.sd-curve input.label {
     text-align: center;
+}
+main.sd-curve canvas.debug{
+    border: thin solid red;
+    margin: 0;
+    padding: 0;
 }

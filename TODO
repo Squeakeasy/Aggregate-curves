@@ -1,5 +1,5 @@
-- Fix multiple graphs
-- Add grid lines
-- Make ordering be x axis, not order added to lists
-- Add labels
+- Improve grid lines and axes
 - Add table with numbers by each graph, two-way binding
+- Add Undo
+- Support click and drag?
+- Support touch
