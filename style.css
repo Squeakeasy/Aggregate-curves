@@ -1,3 +1,8 @@
+body {
+    background-color: black;
+    color: white;
+}
+
 main.sd-curve {
     display: inline-block;
 }
@@ -7,6 +12,7 @@ main.sd-curve h3 {
     padding: 0;
     text-align: center;
     font-size: small;
+    color: #666;
 }
 main.sd-curve div.label {
     text-align: center;
@@ -18,4 +24,14 @@ main.sd-curve canvas.debug{
     border: thin solid red;
     margin: 0;
     padding: 0;
+}
+
+main.sd-curve #values {
+    float: left;
+}
+main.sd-curve #values tr {
+    height: 30px;
+}
+main.sd-curve #values input[type="number"] {
+    width: 4ex;
 }
