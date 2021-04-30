@@ -136,6 +136,18 @@ class SupplyDemandCurve extends HTMLElement {
 };
 customElements.define("supply-demand-curve", SupplyDemandCurve);
 
+class AmountInput extends HTMLTableRowElement {
+    constructor() {
+	super();
+	const template = document.getElementById("amount-input");
+	this.appendChild(template.content.cloneNode(true));
+	this.input = this.querySelector("input[type='number']");
+	this.querySelector("#price").textContent = this.dataset.price;
+    }
+};
+customElements.define("amount-input", AmountInput, { extends: "tr" });
+
+
 function draw_graphs(graphs) {
     for (let g of graphs) {
 	g.draw();

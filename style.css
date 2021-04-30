@@ -28,9 +28,12 @@ main.sd-curve canvas.debug{
 
 main.sd-curve #values {
     float: left;
+    border-spacing: 0;
 }
 main.sd-curve #values tr {
     height: 30px;
+    margin: 0;
+    padding: 0;
 }
 main.sd-curve #values input[type="number"] {
     width: 4ex;
