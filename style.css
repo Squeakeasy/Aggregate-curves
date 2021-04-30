@@ -1,0 +1,13 @@
+main.sd-curve {
+    display: inline-block;
+}
+main.sd-curve h3 {
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: small;
+}
+main.sd-curve input.label {
+    text-align: center;
+}

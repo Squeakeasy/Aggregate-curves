@@ -16,17 +16,20 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--    <link rel="stylesheet" href="style.css">-->
+    <link rel="stylesheet" href="style.css">
     <script src="script.js" async defer></script>
   </head>
   <body>
     <template id="supply-demand-curve">
-      <canvas width=200 height=200></canvas>
-      <div>
-	<label>Curve name
-	  <input type="text" class="label">
-	</label>
-      </div>
+      <link rel="stylesheet" href="style.css">
+      <main class="sd-curve">
+	<canvas width=200 height=200></canvas>
+	<div>
+	  <label><input type="text" class="label">
+	    <h3>Curve name</h3>
+	  </label>
+	</div>
+      </main>
     </template>
     <supply-demand-curve></supply-demand-curve>
     <supply-demand-curve></supply-demand-curve>
