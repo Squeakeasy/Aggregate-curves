@@ -117,7 +117,9 @@ class SupplyDemandCurve extends HTMLElement {
 	do {
 	    p++;
 	} while (PRICES[p] < price);
-	if (Math.abs(PRICES[p - 1] - price) < Math.abs(PRICES[p] - price)) {
+	if (p == PRICES.length) {
+	    this.price_points[PRICES[PRICES.length - 1]] = amount;
+	} else if (Math.abs(PRICES[p - 1] - price) < Math.abs(PRICES[p] - price)) {
 	    this.price_points[PRICES[p - 1]] = amount;
 	} else {
 	    this.price_points[PRICES[p]] = amount;
