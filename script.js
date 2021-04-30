@@ -47,10 +47,12 @@ class SupplyDemandCurve extends HTMLElement {
 	this.shadow.appendChild(template.content.cloneNode(true));
 	this.canvas = this.shadow.querySelector("canvas");
 	this.canvas.addEventListener("click", (e) => this.click(e));
+	this.suppress_inputs = false;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
-	this.axis_size = this.canvas.height - this.axis_offset * 2;
+	this.y_axis_size = this.canvas.height - this.axis_offset * 2;
+	this.x_axis_size = this.y_axis_size;
 	this.price_points = make_price_points();
-
+	
 	this.amount_inputs = {};
 	for (let amount_input of this.shadow.querySelectorAll("#values tr")) {
 	    amount_input.graph = this;
@@ -60,7 +62,17 @@ class SupplyDemandCurve extends HTMLElement {
     get_price_point(index) {
 	return this.price_points[PRICES[index]];
     }
-    
+    make_totals() {
+	this.suppress_inputs = true;
+	this.canvas.width = 800;
+	this.x_axis_size = 780;
+	this.shadow.querySelector("input.label").value = "Totals";
+	this.shadow.querySelector("input.label").disabled = true;
+	for (let el in this.amount_inputs) {
+	    this.amount_inputs[el].querySelector("input").disabled = true;
+	}
+	this.draw();
+    }	
     draw() {
 	const ctx = this.canvas.getContext("2d");
 	ctx.fillStyle = "white";
@@ -73,10 +85,10 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.translate(this.axis_offset, this.axis_offset);
 	ctx.beginPath();
 
-	ctx.moveTo(0, this.axis_size);
-	ctx.lineTo(this.axis_size, this.axis_size);
+	ctx.moveTo(0, this.y_axis_size);
+	ctx.lineTo(this.x_axis_size, this.y_axis_size);
 
-	ctx.moveTo(0, this.axis_size);
+	ctx.moveTo(0, this.y_axis_size);
 	ctx.lineTo(0, 0);
 
 	ctx.stroke();
@@ -91,8 +103,8 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.strokeStyle = "#aaa";
 	ctx.beginPath();
 	for (let price of PRICES) {
-	    ctx.moveTo(0, this.axis_size - price * PRICE_SCALE);
-	    ctx.lineTo(this.axis_size, this.axis_size - price * PRICE_SCALE);
+	    ctx.moveTo(0, this.y_axis_size - price * PRICE_SCALE);
+	    ctx.lineTo(this.x_axis_size, this.y_axis_size - price * PRICE_SCALE);
 	}
 	ctx.stroke();
     }
@@ -102,22 +114,22 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";
-	ctx.moveTo(this.get_price_point(0), this.axis_size - PRICES[0] * PRICE_SCALE);
+	ctx.moveTo(this.get_price_point(0), this.y_axis_size - PRICES[0] * PRICE_SCALE);
 	for (let price of PRICES) {
-	    ctx.lineTo(this.price_points[price], this.axis_size - price * PRICE_SCALE);
+	    ctx.lineTo(this.price_points[price], this.y_axis_size - price * PRICE_SCALE);
 	}
 	ctx.stroke();
 
 	ctx.fillStyle = "blue";
 	for (let price of PRICES) {
 	    ctx.beginPath();
-	    ctx.arc(this.price_points[price], this.axis_size - price * PRICE_SCALE,
+	    ctx.arc(this.price_points[price], this.y_axis_size - price * PRICE_SCALE,
 		    POINT_R, 0, Math.TAU, false);
 	    ctx.fill();
 	}
     }
 
-    adjust_price_point(price, amount, propagate) {
+    adjust_price_point(price, amount) {
 	if (amount < 0) {
 	    amount = 0;
 	}
@@ -133,13 +145,14 @@ class SupplyDemandCurve extends HTMLElement {
 	    price = PRICES[p]
 	}
 	this.price_points[price] = Math.floor(amount);
-	if (propagate != false) {
-	    this.amount_inputs[price].set_amount(Math.floor(amount));
-	}
+	this.amount_inputs[price].set_amount(this.price_points[price]);
     }
     
     click(e) {
-	const price = (this.axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE;
+	if (this.suppress_inputs) {
+	    return;
+	}
+	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE;
 	this.adjust_price_point(price, e.offsetX - this.axis_offset);
 	this.draw();
     }
@@ -158,7 +171,7 @@ class AmountInput extends HTMLTableRowElement {
     }
     input_changed(e) {
 	if (this.graph) {
-	    this.graph.adjust_price_point(this.dataset.price, this.input.value, false);
+	    this.graph.price_points[this.dataset.price] = parseInt(this.input.value);
 	    this.graph.draw();
 	}
     }
@@ -168,6 +181,24 @@ class AmountInput extends HTMLTableRowElement {
 };
 customElements.define("amount-input", AmountInput, { extends: "tr" });
 
+function calculate_totals() {
+    for (let price of PRICES) {
+	total_graph.price_points[price] = 0;
+    }
+    for (let graph of document.querySelectorAll("supply-demand-curve")) {
+	if (graph == total_graph) {
+	    continue;
+	}
+	for (let price of PRICES) {
+	    total_graph.price_points[price] += graph.price_points[price];
+	}
+    }
+    for (let price of PRICES) {
+	total_graph.amount_inputs[price].set_amount(total_graph.price_points[price]);
+    }
+    total_graph.draw();
+}
+
 
 function draw_graphs(graphs) {
     for (let g of graphs) {
@@ -175,8 +206,12 @@ function draw_graphs(graphs) {
     }
 }
 
+const total_graph = document.getElementById("total-graph");
+
 function init() {
     draw_graphs(document.querySelectorAll("supply-demand-curve"));
+
+    total_graph.make_totals();
 }
 
 init();
