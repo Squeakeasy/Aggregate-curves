@@ -1,3 +1,7 @@
+header {
+    margin-bottom: 1em;
+}
+
 main.sd-curve {
     display: inline-block;
 }
