@@ -16,6 +16,8 @@ const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
 const PRICE_SCALE = 3;
 
+const Y_LABELS = 20;
+
 let graphs = [];
 
 if (typeof(Math.TAU) == "undefined") {
@@ -64,8 +66,8 @@ class SupplyDemandCurve extends HTMLElement {
     }
     make_totals() {
 	this.suppress_inputs = true;
-	this.canvas.width = 800;
-	this.x_axis_size = 780;
+	this.canvas.width = 780;
+	this.x_axis_size = 760;
 	this.shadow.querySelector("input.label").value = "Totals";
 	this.shadow.querySelector("input.label").disabled = true;
 	for (let el in this.amount_inputs) {
@@ -82,7 +84,7 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.strokeStyle = "black";
 
 	ctx.save();
-	ctx.translate(this.axis_offset, this.axis_offset);
+	ctx.translate(this.axis_offset + Y_LABELS, this.axis_offset);
 	ctx.beginPath();
 
 	ctx.moveTo(0, this.y_axis_size);
@@ -153,7 +155,7 @@ class SupplyDemandCurve extends HTMLElement {
 	    return;
 	}
 	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE;
-	this.adjust_price_point(price, e.offsetX - this.axis_offset);
+	this.adjust_price_point(price, e.offsetX - this.axis_offset - Y_LABELS);
 	this.draw();
     }
 };
