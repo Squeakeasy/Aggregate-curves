@@ -6,4 +6,5 @@
   - Undo button applies last change backwards
   - Special for reset? Has to include all changes at once
   - If you want a global undo, then make a global list, and undo item objects include who their parent is so they can just be pushed to that list in order.
+- Auto-calculate average
 - Improve grid lines and axes?
