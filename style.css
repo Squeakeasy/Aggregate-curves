@@ -34,6 +34,8 @@ main.sd-curve div.label textarea {
 main.sd-curve canvas {
     margin-right: 5px;
     cursor: crosshair;
+    user-select: none;
+    touch-action: manipulation;
 }
 main.sd-curve canvas.debug{
     border: thin solid red;
