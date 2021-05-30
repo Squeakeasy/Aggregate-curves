@@ -57,6 +57,9 @@ class SupplyDemandCurve extends HTMLElement {
 	
 	this.amount_inputs = {};
 	for (let amount_input of this.shadow.querySelectorAll("#values tr")) {
+	    if (amount_input.querySelector("th")) {
+		continue;
+	    }
 	    amount_input.graph = this;
 	    this.amount_inputs[amount_input.dataset.price] = amount_input;
 	}
@@ -84,7 +87,10 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.strokeStyle = "black";
 
 	ctx.save();
-	ctx.translate(this.axis_offset + Y_LABELS, this.axis_offset);
+	ctx.translate(this.axis_offset, this.axis_offset);
+
+	ctx.save();
+	ctx.translate(Y_LABELS, 0);
 	ctx.beginPath();
 
 	ctx.moveTo(0, this.y_axis_size);
@@ -96,10 +102,18 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.stroke();
 
 	this.draw_price_guides(ctx);
-	
+	this.draw_axes(ctx);
 	this.draw_points(ctx);
 	
 	ctx.restore();
+
+	ctx.fillStyle = "black";
+	ctx.textBaseline = "middle";
+	for (let price of PRICES) {
+	    ctx.fillText("" + price, 0, this.y_axis_size - price * PRICE_SCALE);
+	}
+
+    	ctx.restore();
     }
     draw_price_guides(ctx) {
 	ctx.strokeStyle = "#aaa";
@@ -109,6 +123,12 @@ class SupplyDemandCurve extends HTMLElement {
 	    ctx.lineTo(this.x_axis_size, this.y_axis_size - price * PRICE_SCALE);
 	}
 	ctx.stroke();
+    }
+    draw_axes(ctx) {
+	// ctx.strokeStyle = "black";
+	// ctx.fillStyle = "black";
+	// for (let hours = 2; hours < 16; hours += 2) {
+	//     ctx.fillText("" + hours, 
     }
     draw_points(ctx) {
 	if (this.price_points.length == 0) {
@@ -168,7 +188,7 @@ class AmountInput extends HTMLTableRowElement {
 	this.appendChild(template.content.cloneNode(true));
 	this.input = this.querySelector("input[type='number']");
 	this.input.addEventListener("change", (e) => this.input_changed(e));
-	this.querySelector("#price").textContent = this.dataset.price;
+	this.querySelector("#price input").value = this.dataset.price;
 	this.set_amount(0);
     }
     input_changed(e) {

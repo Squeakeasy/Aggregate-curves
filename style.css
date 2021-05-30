@@ -26,15 +26,19 @@ main.sd-curve canvas.debug{
 }
 
 main.sd-curve #values {
-    float: left;
+    float: right;
     border-spacing: 0;
+    position: relative;
 }
 main.sd-curve #values tr {
-    height: 30px;
+/*    height: 30px; */
     margin: 0;
     padding: 0;
 }
-main.sd-curve #values input[type="number"] {
+main.sd-curve #values th {
+    font-weight: normal;
+}
+main.sd-curve #values input[type="number"], main.sd-curve #values #price input {
     width: 5ex;
 }
 

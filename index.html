@@ -21,12 +21,19 @@
   </head>
   <body>
     <template id="amount-input">
-      <td><input type="number" min=0  data-price="0"></td><td id="price"></td>
+      <td><input type="number" min=0  data-price="0">,</td>
+      <td id="price"><input type="text" readonly></td>
     </template>
     <template id="supply-demand-curve">
       <link rel="stylesheet" href="style.css">
       <main class="sd-curve">
+	<canvas width=300 height=300></canvas>
 	<table id="values">
+	  <tr>
+	    <th>Hours,</th>
+	    <th>Wage</th>
+	  </tr>
+	  <tr is="amount-input" data-price="100"></tr>
 	  <tr is="amount-input" data-price="90"></tr>
 	  <tr is="amount-input" data-price="80"></tr>
 	  <tr is="amount-input" data-price="70"></tr>
@@ -36,9 +43,7 @@
 	  <tr is="amount-input" data-price="30"></tr>
 	  <tr is="amount-input" data-price="20"></tr>
 	  <tr is="amount-input" data-price="10"></tr>
-	  <tr is="amount-input" data-price="0"></tr>
 	</table>
-	<canvas width=300 height=300></canvas>
 	<div>
 	  <label>
 	    <div class="label"><input type="text" class="label"></div>
