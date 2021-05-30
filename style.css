@@ -54,7 +54,7 @@ main.sd-curve #values tr {
 main.sd-curve #values th {
     font-weight: normal;
 }
-main.sd-curve #values input[type="number"], main.sd-curve #values #price input {
+main.sd-curve #values input[type="number"], main.sd-curve #values input[type="text"].number {
     width: 5ex;
 }
 

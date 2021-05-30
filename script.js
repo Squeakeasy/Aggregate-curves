@@ -118,7 +118,10 @@ class SupplyDemandCurve extends HTMLElement {
 	this.shadow.querySelector("input.label").disabled = true;
 	this.reset_button.style.display = "none";
 	for (let el in this.amount_inputs) {
-	    this.amount_inputs[el].querySelector("input").disabled = true;
+	    let input = this.amount_inputs[el].querySelector("input");
+	    input.classList.add("number");
+	    input.disabled = true;
+	    input.type = "text";
 	}
 	this.draw();
     }	
@@ -240,8 +243,10 @@ class SupplyDemandCurve extends HTMLElement {
 	    return;
 	}
 	this.in_use = true;
-	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE + 10;
-	this.adjust_price_point(price, (e.offsetX - this.axis_offset - Y_LABELS + HOUR_SCALE / 2) / HOUR_SCALE);
+	this.adjust_price_point((this.y_axis_size - (e.offsetY - this.axis_offset))
+				/ PRICE_SCALE + 10,
+				(e.offsetX - this.axis_offset - Y_LABELS + HOUR_SCALE / 2)
+				/ HOUR_SCALE);
 	this.draw();
     }
 };
