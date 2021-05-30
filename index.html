@@ -46,6 +46,7 @@
 	  <tr is="amount-input" data-price="30"></tr>
 	  <tr is="amount-input" data-price="20"></tr>
 	  <tr is="amount-input" data-price="10"></tr>
+	  <tr class="reset"><td colspan="2"><button onclick="click_reset(event)" disabled>Reset</button></td></tr>
 	</table>
 	<div>
 	  <label>
@@ -67,6 +68,8 @@
     <supply-demand-curve pos="Nine"></supply-demand-curve>
     <supply-demand-curve pos="Ten"></supply-demand-curve>
     <supply-demand-curve id="summary-graph" title="Average"></supply-demand-curve>
-    <button class="calculate" onclick="calculate_summary()">Calculate Totals</button>
+    <div>
+      <button class="calculate" onclick="calculate_summary()">Calculate Average</button>
+    </div>
   </body>
 </html>

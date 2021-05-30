@@ -58,6 +58,12 @@ main.sd-curve #values input[type="number"], main.sd-curve #values #price input {
     width: 5ex;
 }
 
+main.sd-curve #values .reset td {
+    padding-top: 5px;
+    text-align: center;
+}
+
 .calculate {
+    margin-top: 20px;
     font-size: 200%;
 }

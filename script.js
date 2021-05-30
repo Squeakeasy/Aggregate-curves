@@ -62,6 +62,8 @@ class SupplyDemandCurve extends HTMLElement {
 	this.shadow.appendChild(template.content.cloneNode(true));
 	this.canvas = this.shadow.querySelector("canvas");
 	this.canvas.addEventListener("click", (e) => this.click(e));
+	this.reset_button = this.shadow.querySelector(".reset button");
+	this.reset_button.graph = this;
 	this.suppress_inputs = false;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
 	this.y_axis_size = this.canvas.height - X_AXIS_SPACE - this.axis_offset * 2;
@@ -70,12 +72,21 @@ class SupplyDemandCurve extends HTMLElement {
 	
 	this.amount_inputs = {};
 	for (let amount_input of this.shadow.querySelectorAll("#values tr")) {
-	    if (amount_input.querySelector("th")) {
+	    if (amount_input.classList.contains("reset") || amount_input.querySelector("th")) {
 		continue;
 	    }
 	    amount_input.graph = this;
 	    this.amount_inputs[amount_input.dataset.price] = amount_input;
 	}
+
+	this._in_use = false;
+    }
+    get in_use() {
+	return this._in_use;
+    }
+    set in_use(val) {
+	this._in_use = val;
+	this.reset_button.disabled = !this._in_use;
     }
     update_attrs(el) {
 	const title = el.getAttribute("title");
@@ -91,15 +102,21 @@ class SupplyDemandCurve extends HTMLElement {
     connectedCallback() {
 	this.update_attrs(this);
     }
+    reset() {
+	this.in_use = false;
+	for (let price of PRICES) {
+	    this.adjust_price_point(price, 0);
+	}
+	this.draw();
+    }
     get_price_point(index) {
 	return this.price_points[PRICES[index]];
     }
     make_summary() {
 	this.suppress_inputs = true;
-	this.canvas.width = 780;
-	this.x_axis_size = 760;
 	this.shadow.querySelector("input.label").value = "Average";
 	this.shadow.querySelector("input.label").disabled = true;
+	this.reset_button.style.display = "none";
 	for (let el in this.amount_inputs) {
 	    this.amount_inputs[el].querySelector("input").disabled = true;
 	}
@@ -219,6 +236,7 @@ class SupplyDemandCurve extends HTMLElement {
 	if (this.suppress_inputs) {
 	    return;
 	}
+	this.in_use = true;
 	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE + 10;
 	this.adjust_price_point(price, (e.offsetX - this.axis_offset - Y_LABELS) / HOUR_SCALE);
 	this.draw();
@@ -239,6 +257,7 @@ class AmountInput extends HTMLTableRowElement {
     input_changed(e) {
 	if (this.graph) {
 	    this.graph.price_points[this.dataset.price] = parseInt(this.input.value);
+	    this.graph.in_use = true;
 	    this.graph.draw();
 	}
     }
@@ -248,19 +267,33 @@ class AmountInput extends HTMLTableRowElement {
 };
 customElements.define("amount-input", AmountInput, { extends: "tr" });
 
+function click_reset(e) {
+    e.target.graph.reset();
+}
+
 function calculate_summary() {
     for (let price of PRICES) {
 	summary_graph.price_points[price] = 0;
     }
+    let count = 0;
     for (let graph of document.querySelectorAll("supply-demand-curve")) {
 	if (graph == summary_graph) {
 	    continue;
 	}
+	if (!graph.in_use) {
+	    continue;
+	}
+	count++;
 	for (let price of PRICES) {
 	    summary_graph.price_points[price] += graph.price_points[price];
 	}
     }
+    if (count == 0) {
+	alert("You must enter data in at least one graph to see an average!");
+	return;
+    }
     for (let price of PRICES) {
+	summary_graph.price_points[price] /= count;
 	summary_graph.amount_inputs[price].set_amount(summary_graph.price_points[price]);
     }
     summary_graph.draw();
