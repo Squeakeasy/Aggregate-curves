@@ -1,3 +1,9 @@
 - Support click and drag
+  - On mousedown, save current line
+  - On mousemotion, adjust point, using X normally, but saved line instead of y
 - Add Undo
+  - All changes (so just price_points?) get saved for each graph in a list
+  - Undo button applies last change backwards
+  - Special for reset? Has to include all changes at once
+  - If you want a global undo, then make a global list, and undo item objects include who their parent is so they can just be pushed to that list in order.
 - Improve grid lines and axes?
