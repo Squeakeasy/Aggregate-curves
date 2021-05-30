@@ -5,6 +5,14 @@ header {
 main.sd-curve {
     display: inline-block;
 }
+main.sd-curve #title {
+    margin-left: 30px;
+    width: 270px;
+    cursor: pointer;
+}
+main.sd-curve #title.static {
+    cursor: unset;
+}
 main.sd-curve h3 {
     font-weight: normal;
     margin: 0;
@@ -29,6 +37,7 @@ main.sd-curve #values {
     float: right;
     border-spacing: 0;
     position: relative;
+/*    top: -20px; */
 }
 main.sd-curve #values tr {
 /*    height: 30px; */

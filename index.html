@@ -27,6 +27,9 @@
     <template id="supply-demand-curve">
       <link rel="stylesheet" href="style.css">
       <main class="sd-curve">
+	<div>
+	  <h2 id="title" contenteditable>Demand Curve</h2>
+	</div>
 	<canvas width=300 height=300></canvas>
 	<table id="values">
 	  <tr>
@@ -53,18 +56,17 @@
       </main>
     </template>
     <header><a href="#total">See totals</a></header>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <supply-demand-curve></supply-demand-curve>
-    <h1 id="total">Total</h1>
-    <supply-demand-curve id="total-graph"></supply-demand-curve>
+    <supply-demand-curve pos="One"></supply-demand-curve>
+    <supply-demand-curve pos="Two"></supply-demand-curve>
+    <supply-demand-curve pos="Three"></supply-demand-curve>
+    <supply-demand-curve pos="Four"></supply-demand-curve>
+    <supply-demand-curve pos="Five"></supply-demand-curve>
+    <supply-demand-curve pos="Six"></supply-demand-curve>
+    <supply-demand-curve pos="Seven"></supply-demand-curve>
+    <supply-demand-curve pos="Eight"></supply-demand-curve>
+    <supply-demand-curve pos="Nine"></supply-demand-curve>
+    <supply-demand-curve pos="Ten"></supply-demand-curve>
+    <supply-demand-curve id="total-graph" title="Total"></supply-demand-curve>
     <button class="calculate" onclick="calculate_totals()">Calculate Totals</button>
   </body>
 </html>

@@ -64,6 +64,20 @@ class SupplyDemandCurve extends HTMLElement {
 	    this.amount_inputs[amount_input.dataset.price] = amount_input;
 	}
     }
+    update_attrs(el) {
+	const title = el.getAttribute("title");
+	const title_el = this.shadow.querySelector("#title");
+	if (title) {
+	    title_el.textContent = title;
+	    title_el.setAttribute("contenteditable", false);
+	    title_el.classList.add("static");
+	} else {
+	    title_el.textContent += " " + el.getAttribute("pos");
+	}
+    }
+    connectedCallback() {
+	this.update_attrs(this);
+    }
     get_price_point(index) {
 	return this.price_points[PRICES[index]];
     }
