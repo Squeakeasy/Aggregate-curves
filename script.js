@@ -157,7 +157,10 @@ class SupplyDemandCurve extends HTMLElement {
 	    ctx.fillText("" + hour, this.hours_to_x(hour),
 			 this.y_axis_size + 18);
 	}
-	ctx.fillText("Hours per day", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 32);
+	ctx.save();
+	ctx.font = "13px sans-serif";
+	ctx.fillText("Hours per day", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 34);
+	ctx.restore();
 	
 	ctx.restore();
 
@@ -171,12 +174,12 @@ class SupplyDemandCurve extends HTMLElement {
 
 	ctx.save();
 	ctx.fillStyle = "black";
-	ctx.font = "12px sans-serif";
+	ctx.font = "13px sans-serif";
 	ctx.textBaseline = "alphabetic";
 	ctx.textAlign = "center";
 	ctx.translate(10, this.y_axis_size / 2);
 	ctx.rotate(-Math.TAU / 4);
-	ctx.fillText("Wages ($/hour)", 0, 0);
+	ctx.fillText("Wages  ( $ / hour )", 0, 0);
 	ctx.restore();
 
     }
@@ -238,7 +241,7 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	this.in_use = true;
 	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE + 10;
-	this.adjust_price_point(price, (e.offsetX - this.axis_offset - Y_LABELS) / HOUR_SCALE);
+	this.adjust_price_point(price, (e.offsetX - this.axis_offset - Y_LABELS + HOUR_SCALE / 2) / HOUR_SCALE);
 	this.draw();
     }
 };
