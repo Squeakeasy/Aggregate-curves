@@ -2,6 +2,10 @@ header {
     margin-bottom: 1em;
 }
 
+supply-demand-curve {
+    margin-right: 10px;
+}
+
 main.sd-curve {
     display: inline-block;
 }

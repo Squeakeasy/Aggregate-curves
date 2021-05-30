@@ -16,7 +16,7 @@ const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
 const PRICE_SCALE = 3;
 
-const Y_LABELS = 20;
+const Y_LABELS = 30;
 
 let graphs = [];
 
@@ -26,7 +26,7 @@ if (typeof(Math.TAU) == "undefined") {
 
 function make_prices() {
     const prices = [];
-    for (let y = 0; y < 100; y += 10) {
+    for (let y = 10; y <= 100; y += 10) {
 	prices.push(y);
     }
     return prices;
@@ -124,17 +124,28 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.fillStyle = "black";
 	ctx.textBaseline = "middle";
 	for (let price of PRICES) {
-	    ctx.fillText("" + price, 0, this.y_axis_size - price * PRICE_SCALE);
+	    ctx.fillText("" + price, 5, this.y_axis_size - (price - 10) * PRICE_SCALE);
 	}
 
     	ctx.restore();
+
+	ctx.save();
+	ctx.fillStyle = "black";
+	ctx.font = "12px sans-serif";
+	ctx.textBaseline = "alphabetic";
+	ctx.textAlign = "center";
+	ctx.translate(10, this.y_axis_size / 2);
+	ctx.rotate(-Math.TAU / 4);
+	ctx.fillText("Wages ($/hour)", 0, 0);
+	ctx.restore();
+
     }
     draw_price_guides(ctx) {
 	ctx.strokeStyle = "#aaa";
 	ctx.beginPath();
 	for (let price of PRICES) {
-	    ctx.moveTo(0, this.y_axis_size - price * PRICE_SCALE);
-	    ctx.lineTo(this.x_axis_size, this.y_axis_size - price * PRICE_SCALE);
+	    ctx.moveTo(0, this.y_axis_size - (price - 10) * PRICE_SCALE);
+	    ctx.lineTo(this.x_axis_size, this.y_axis_size - (price - 10) * PRICE_SCALE);
 	}
 	ctx.stroke();
     }
@@ -150,16 +161,16 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";
-	ctx.moveTo(this.get_price_point(0), this.y_axis_size - PRICES[0] * PRICE_SCALE);
+	ctx.moveTo(this.get_price_point(0), this.y_axis_size - (PRICES[0] - 10) * PRICE_SCALE);
 	for (let price of PRICES) {
-	    ctx.lineTo(this.price_points[price], this.y_axis_size - price * PRICE_SCALE);
+	    ctx.lineTo(this.price_points[price], this.y_axis_size - (price - 10) * PRICE_SCALE);
 	}
 	ctx.stroke();
 
 	ctx.fillStyle = "blue";
 	for (let price of PRICES) {
 	    ctx.beginPath();
-	    ctx.arc(this.price_points[price], this.y_axis_size - price * PRICE_SCALE,
+	    ctx.arc(this.price_points[price], this.y_axis_size - (price - 10) * PRICE_SCALE,
 		    POINT_R, 0, Math.TAU, false);
 	    ctx.fill();
 	}
@@ -188,7 +199,7 @@ class SupplyDemandCurve extends HTMLElement {
 	if (this.suppress_inputs) {
 	    return;
 	}
-	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE;
+	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE + 10;
 	this.adjust_price_point(price, e.offsetX - this.axis_offset - Y_LABELS);
 	this.draw();
     }

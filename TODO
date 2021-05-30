@@ -1,4 +1,3 @@
-- Make wages go from 10-100, not 0-90
 - Put in hours axes labels, rectify with internal values
 - Add reset button
 - Change total to average, make average only count non-reset graphs
