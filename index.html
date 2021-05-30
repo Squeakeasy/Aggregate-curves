@@ -21,7 +21,7 @@
   </head>
   <body>
     <template id="amount-input">
-      <td><input type="number" min=0  data-price="0">,</td>
+      <td><input type="number" min=0 max=16 data-price="0">,</td>
       <td id="price"><input type="text" readonly></td>
     </template>
     <template id="supply-demand-curve">
@@ -30,7 +30,7 @@
 	<div>
 	  <h2 id="title" contenteditable>Demand Curve</h2>
 	</div>
-	<canvas width=300 height=300></canvas>
+	<canvas width=300 height=335></canvas>
 	<table id="values">
 	  <tr>
 	    <th>Hours,</th>

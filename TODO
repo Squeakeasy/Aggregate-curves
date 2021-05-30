@@ -1,6 +1,5 @@
-- Put in hours axes labels, rectify with internal values
 - Add reset button
-- Change total to average, make average only count non-reset graphs
+- Change total to average (normal graph otherwise), make average only count non-reset graphs
 - Support click and drag
 - Make description at bottom into textarea
 - Add Undo

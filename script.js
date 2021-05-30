@@ -16,6 +16,10 @@ const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
 const PRICE_SCALE = 3;
 
+const HOUR_SCALE = 15;
+const HOURS_MAX = 16; // Keep in line with amount-input's number input max
+
+const X_AXIS_SPACE = 35; // Keep in line with amount <canvas> height is greater than 300
 const Y_LABELS = 30;
 
 let graphs = [];
@@ -32,6 +36,15 @@ function make_prices() {
     return prices;
 }
 const PRICES = make_prices();
+
+function make_hours() {
+    const hours = [];
+    for (let x = 0; x <= HOURS_MAX; x += 2) {
+	hours.push(x);
+    }
+    return hours;
+}
+const HOURS = make_hours();
 
 function make_price_points() {
     const points = {};
@@ -51,7 +64,7 @@ class SupplyDemandCurve extends HTMLElement {
 	this.canvas.addEventListener("click", (e) => this.click(e));
 	this.suppress_inputs = false;
 	this.axis_offset = GRAPH_AXIS_OFFSET;
-	this.y_axis_size = this.canvas.height - this.axis_offset * 2;
+	this.y_axis_size = this.canvas.height - X_AXIS_SPACE - this.axis_offset * 2;
 	this.x_axis_size = this.y_axis_size;
 	this.price_points = make_price_points();
 	
@@ -92,6 +105,9 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	this.draw();
     }	
+    hours_to_x(price_point) {
+	return price_point * HOUR_SCALE;
+    }
     draw() {
 	const ctx = this.canvas.getContext("2d");
 	ctx.fillStyle = "white";
@@ -116,8 +132,15 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.stroke();
 
 	this.draw_price_guides(ctx);
-	this.draw_axes(ctx);
 	this.draw_points(ctx);
+
+	ctx.fillStyle = "black";
+	ctx.textAlign = "center";
+	for (let hour of HOURS) {
+	    ctx.fillText("" + hour, this.hours_to_x(hour),
+			 this.y_axis_size + 18);
+	}
+	ctx.fillText("Hours per day", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 32);
 	
 	ctx.restore();
 
@@ -149,28 +172,22 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	ctx.stroke();
     }
-    draw_axes(ctx) {
-	// ctx.strokeStyle = "black";
-	// ctx.fillStyle = "black";
-	// for (let hours = 2; hours < 16; hours += 2) {
-	//     ctx.fillText("" + hours, 
-    }
     draw_points(ctx) {
 	if (this.price_points.length == 0) {
 	    return;
 	}
 	ctx.beginPath();
 	ctx.strokeStyle = "blue";
-	ctx.moveTo(this.get_price_point(0), this.y_axis_size - (PRICES[0] - 10) * PRICE_SCALE);
+	ctx.moveTo(this.hours_to_x(this.get_price_point(0)), this.y_axis_size - (PRICES[0] - 10) * PRICE_SCALE);
 	for (let price of PRICES) {
-	    ctx.lineTo(this.price_points[price], this.y_axis_size - (price - 10) * PRICE_SCALE);
+	    ctx.lineTo(this.hours_to_x(this.price_points[price]), this.y_axis_size - (price - 10) * PRICE_SCALE);
 	}
 	ctx.stroke();
 
 	ctx.fillStyle = "blue";
 	for (let price of PRICES) {
 	    ctx.beginPath();
-	    ctx.arc(this.price_points[price], this.y_axis_size - (price - 10) * PRICE_SCALE,
+	    ctx.arc(this.hours_to_x(this.price_points[price]), this.y_axis_size - (price - 10) * PRICE_SCALE,
 		    POINT_R, 0, Math.TAU, false);
 	    ctx.fill();
 	}
@@ -179,6 +196,9 @@ class SupplyDemandCurve extends HTMLElement {
     adjust_price_point(price, amount) {
 	if (amount < 0) {
 	    amount = 0;
+	}
+	if (amount > HOURS_MAX) {
+	    amount = HOURS_MAX;
 	}
 	let p = 0;
 	do {
@@ -200,7 +220,7 @@ class SupplyDemandCurve extends HTMLElement {
 	    return;
 	}
 	const price = (this.y_axis_size - (e.offsetY - this.axis_offset)) / PRICE_SCALE + 10;
-	this.adjust_price_point(price, e.offsetX - this.axis_offset - Y_LABELS);
+	this.adjust_price_point(price, (e.offsetX - this.axis_offset - Y_LABELS) / HOUR_SCALE);
 	this.draw();
     }
 };

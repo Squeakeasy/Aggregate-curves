@@ -31,6 +31,9 @@ main.sd-curve div.label {
 main.sd-curve input.label {
     text-align: center;
 }
+main.sd-curve canvas {
+    margin-right: 5px;
+}
 main.sd-curve canvas.debug{
     border: thin solid red;
     margin: 0;
