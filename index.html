@@ -28,7 +28,7 @@
       <link rel="stylesheet" href="style.css">
       <main class="sd-curve">
 	<div>
-	  <h2 id="title" contenteditable>Demand Curve</h2>
+	  <h2 id="title" role="textbox" contenteditable>Demand Curve</h2>
 	</div>
 	<canvas width=300 height=335></canvas>
 	<table id="values">
@@ -48,11 +48,8 @@
 	  <tr is="amount-input" data-price="10"></tr>
 	  <tr class="reset"><td colspan="2"><button onclick="click_reset(event)" disabled>Reset</button></td></tr>
 	</table>
-	<div>
-	  <label>
-	    <div class="label"><input type="text" class="label"></div>
-	    <h3>Curve name</h3>
-	  </label>
+	<div class="label">
+	  <textarea placeholder="Description" title="Custom description of this graph"></textarea>
 	</div>
       </main>
     </template>
@@ -67,7 +64,7 @@
     <supply-demand-curve pos="Eight"></supply-demand-curve>
     <supply-demand-curve pos="Nine"></supply-demand-curve>
     <supply-demand-curve pos="Ten"></supply-demand-curve>
-    <supply-demand-curve id="summary-graph" title="Average"></supply-demand-curve>
+    <supply-demand-curve id="summary-graph" custom-title="Average"></supply-demand-curve>
     <div>
       <button class="calculate" onclick="calculate_summary()">Calculate Average</button>
     </div>

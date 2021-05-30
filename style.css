@@ -26,10 +26,10 @@ main.sd-curve h3 {
     color: #666;
 }
 main.sd-curve div.label {
-    text-align: center;
 }
-main.sd-curve input.label {
-    text-align: center;
+main.sd-curve div.label textarea {
+    margin-left: 35px;
+    width: 265px;
 }
 main.sd-curve canvas {
     margin-right: 5px;

@@ -89,7 +89,7 @@ class SupplyDemandCurve extends HTMLElement {
 	this.reset_button.disabled = !this._in_use;
     }
     update_attrs(el) {
-	const title = el.getAttribute("title");
+	const title = el.getAttribute("custom-title");
 	const title_el = this.shadow.querySelector("#title");
 	if (title) {
 	    title_el.textContent = title;
@@ -114,8 +114,8 @@ class SupplyDemandCurve extends HTMLElement {
     }
     make_summary() {
 	this.suppress_inputs = true;
-	this.shadow.querySelector("input.label").value = "Average";
-	this.shadow.querySelector("input.label").disabled = true;
+	this.shadow.querySelector("div.label textarea").disabled = true;
+	this.shadow.querySelector("div.label textarea").value = "Average of all the demand curves currently in use.";
 	this.reset_button.style.display = "none";
 	for (let el in this.amount_inputs) {
 	    let input = this.amount_inputs[el].querySelector("input");
