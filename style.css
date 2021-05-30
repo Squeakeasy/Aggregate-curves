@@ -37,6 +37,9 @@ main.sd-curve canvas {
     user-select: none;
     touch-action: manipulation;
 }
+main.sd-curve canvas.summary {
+    cursor: unset;
+}
 main.sd-curve canvas.debug{
     border: thin solid red;
     margin: 0;
