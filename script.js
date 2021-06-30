@@ -16,8 +16,8 @@ const GRAPH_AXIS_OFFSET = 10.5;
 const POINT_R = 5;
 const PRICE_SCALE = 3;
 
-const HOUR_SCALE = 15;
-const HOURS_MAX = 16; // Keep in line with amount-input's number input max
+const HOUR_SCALE = 2.4;
+const HOURS_MAX = 100; // Keep in line with amount-input's number input max
 
 const X_AXIS_SPACE = 35; // Keep in line with amount <canvas> height is greater than 300
 const Y_LABELS = 30;
@@ -163,7 +163,7 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	ctx.save();
 	ctx.font = "13px sans-serif";
-	ctx.fillText("Hours per day", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 34);
+	ctx.fillText("Hours per week", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 34);
 	ctx.restore();
 	
 	ctx.restore();
