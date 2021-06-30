@@ -18,6 +18,7 @@ const PRICE_SCALE = 3;
 
 const HOUR_SCALE = 2.4;
 const HOURS_MAX = 100; // Keep in line with amount-input's number input max
+const HOUR_STEP = 10;
 
 const X_AXIS_SPACE = 35; // Keep in line with amount <canvas> height is greater than 300
 const Y_LABELS = 30;
@@ -39,7 +40,7 @@ const PRICES = make_prices();
 
 function make_hours() {
     const hours = [];
-    for (let x = 0; x <= HOURS_MAX; x += 2) {
+    for (let x = 0; x <= HOURS_MAX; x += HOUR_STEP) {
 	hours.push(x);
     }
     return hours;
