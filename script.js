@@ -117,7 +117,7 @@ class SupplyDemandCurve extends HTMLElement {
 	this.suppress_inputs = true;
 	this.canvas.classList.add("summary");
 	this.shadow.querySelector("div.label textarea").disabled = true;
-	this.shadow.querySelector("div.label textarea").value = "Average of all the demand curves currently in use.";
+	this.shadow.querySelector("div.label textarea").value = "Average of all the supply curves currently in use.";
 	this.reset_button.style.display = "none";
 	for (let el in this.amount_inputs) {
 	    let input = this.amount_inputs[el].querySelector("input");
