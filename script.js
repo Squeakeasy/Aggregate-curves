@@ -23,7 +23,7 @@ const HOUR_STEP = 10;
 const X_AXIS_SPACE = 35; // Keep in line with amount <canvas> height is greater than 300
 const Y_LABELS = 30;
 
-let graphs = [];
+//let graphs = [];
 
 if (typeof(Math.TAU) == "undefined") {
     Math.TAU = Math.PI * 2;
@@ -81,6 +81,26 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 
 	this._in_use = false;
+
+	this.init_supply();
+    }
+    init_supply() {
+	this.xlabel = "Hours per week";
+	this.ylabel = "Wages  ( $ / hour )";
+    }
+    init_demand() {
+	this.xlabel = "Units purchased";
+	this.ylabel = "Price ( $ / unit )";
+
+	const title = this.shadow.querySelector("#title");
+	const regex = title.textContent.match(/^Supply Curve (One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten)$/);
+	if (regex) {
+	    title.textContent = "Demand Curve " + regex[1];
+	}
+	
+	const tr = this.shadow.querySelector("#values tr:first-child");
+	tr.children[0].textContent = "Units";
+	tr.children[1].textContent = "Price";
     }
     get in_use() {
 	return this._in_use;
@@ -164,7 +184,7 @@ class SupplyDemandCurve extends HTMLElement {
 	}
 	ctx.save();
 	ctx.font = "13px sans-serif";
-	ctx.fillText("Hours per week", this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 34);
+	ctx.fillText(this.xlabel, this.x_axis_size / 2 - Y_LABELS / 2, this.y_axis_size + 34);
 	ctx.restore();
 	
 	ctx.restore();
@@ -184,7 +204,7 @@ class SupplyDemandCurve extends HTMLElement {
 	ctx.textAlign = "center";
 	ctx.translate(10, this.y_axis_size / 2);
 	ctx.rotate(-Math.TAU / 4);
-	ctx.fillText("Wages  ( $ / hour )", 0, 0);
+	ctx.fillText(this.ylabel, 0, 0);
 	ctx.restore();
 
     }
@@ -317,6 +337,20 @@ function draw_graphs(graphs) {
 }
 
 const summary_graph = document.getElementById("summary-graph");
+
+// IN-CONSOLE API
+const api = {
+    help: function() {
+	console.log("You've already made it this far! Enter `api` in the console to see the list of possible commands (each one will be followed by \": f\"). You can run a command by entering it, such as `api.help()`. Always be sure to follow a command with `()`.");
+    },
+    demand_curves: function() {
+	Array.from(document.querySelectorAll("supply-demand-curve")).map(curve => curve.init_demand());
+	draw_graphs(document.querySelectorAll("supply-demand-curve"));
+    },
+}
+function help() {
+    api.help();
+}
 
 function init() {
     draw_graphs(document.querySelectorAll("supply-demand-curve"));
