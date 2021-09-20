@@ -346,6 +346,7 @@ const api = {
     demand_curves: function() {
 	Array.from(document.querySelectorAll("supply-demand-curve")).map(curve => curve.init_demand());
 	draw_graphs(document.querySelectorAll("supply-demand-curve"));
+	console.log("Re-labeled supply graphs to demand graphs");
     },
 }
 function help() {
